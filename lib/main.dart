@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
 import './transaction.dart';
 
 void main() => runApp(MyApp());
@@ -27,20 +29,26 @@ class MyHomePage extends StatelessWidget {
       amount: 2000,
       date: DateTime.now(),
     ),
-    Transaction(
-      id: 'a3',
-      title: 'Mouse',
-      amount: 1000,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 'a4',
-      title: 'Watch',
-      amount: 1500,
-      date: DateTime.now(),
-    ),
+    // Transaction(
+    //   id: 'a3',
+    //   title: 'Mouse',
+    //   amount: 1000,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 'a4',
+    //   title: 'Watch',
+    //   amount: 1500,
+    //   date: DateTime.now(),
+    // ),
   ];
 
+  // String titleInput;
+  // String amountInput;
+
+  final titleController =TextEditingController();
+  final amountController =TextEditingController();
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,13 +56,43 @@ class MyHomePage extends StatelessWidget {
         title: Text('Flutter App'),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Container(
             width: double.infinity,
             child: Card(
-                color: Colors.deepOrange, elevation: 5, child: Text('Chart')),
+              color: Colors.deepOrange,
+              elevation: 5,
+              child: Text('Chart'),
+            ),
+          ),
+          Card(
+            elevation: 10,
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  TextField(
+                    decoration: InputDecoration(labelText: 'Title'),
+                    controller: titleController,
+            
+                  ),
+                  TextField(
+                    decoration: InputDecoration(labelText: 'Amount'),
+                    controller: amountController,
+                  ),
+                  FlatButton(
+                    child: Text('Add Transaction'),
+                    textColor: Colors.brown,
+                    onPressed: () {
+                      print(titleController.text);
+                      print(amountController.text);
+                    },
+                  )
+                ],
+              ),
+            ),
           ),
           Column(
             children: transactions.map((tx) {
@@ -62,7 +100,7 @@ class MyHomePage extends StatelessWidget {
                 child: Row(
                   children: <Widget>[
                     Container(
-                      padding: EdgeInsets.all(10),
+                      padding: EdgeInsets.all(12),
                       margin: EdgeInsets.symmetric(
                         horizontal: 10,
                         vertical: 12,
@@ -73,10 +111,10 @@ class MyHomePage extends StatelessWidget {
                         width: 2,
                       )),
                       child: Text(
-                        'Ksh:${tx.amount}',
+                        'Ksh ${tx.amount}',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 18,
+                            fontSize: 17,
                             color: Colors.teal),
                       ),
                     ),
@@ -85,16 +123,16 @@ class MyHomePage extends StatelessWidget {
                       children: <Widget>[
                         Text(
                           tx.title,
-                          textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
                         ),
                         Text(
-                          tx.date.toString(),
+                          DateFormat.yMMMd().format(tx.date),
                           style: TextStyle(
                             color: Colors.blueGrey,
+                            fontSize: 12,
                           ),
                         ),
                       ],
