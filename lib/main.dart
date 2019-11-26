@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:personalexpenses/widgets/transaction_list.dart';
 
+import './widgets/chart.dart';
 import './widgets/transaction_list.dart';
 import './widgets/new_transaction.dart';
 import './models/transaction.dart';
@@ -11,7 +11,29 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter App',
+      title: 'Personal Expenses',
+      theme: ThemeData(
+        primarySwatch: Colors.blueGrey,
+        fontFamily: 'ComicSans',
+        textTheme: ThemeData.light().textTheme.copyWith(
+              title: TextStyle(
+                color: Colors.black87,
+                fontFamily: 'ComicSans',
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+        appBarTheme: AppBarTheme(
+          textTheme: ThemeData.light().textTheme.copyWith(
+                title: TextStyle(
+                  color: Colors.black87,
+                  fontFamily: 'Quicksand',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+        ),
+      ),
       home: MyHomePage(),
     );
   }
@@ -24,55 +46,65 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _usertransactions = [
-    Transaction(
-      id: 'a1',
-      title: 'Food',
-      amount: 2500,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 'a2',
-      title: 'Keyboard',
-      amount: 1500,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 'a3',
-      title: 'Mouse',
-      amount: 1000,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 'a4',
-      title: 'Watch',
-      amount: 1500,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 'a5',
-      title: 'Stationery',
-      amount: 1230,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 'a6',
-      title: 'Usb',
-      amount: 250,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 'a7',
-      title: 'Earphones',
-      amount: 100,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 'a8',
-      title: 'Clothes',
-      amount: 1000,
-      date: DateTime.now(),
-    ),
+    // Transaction(
+    //   id: 'a1',
+    //   title: 'Food',
+    //   amount: 2500,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 'a2',
+    //   title: 'Keyboard',
+    //   amount: 1500,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 'a3',
+    //   title: 'Mouse',
+    //   amount: 1000,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 'a4',
+    //   title: 'Watch',
+    //   amount: 1500,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 'a5',
+    //   title: 'Stationery',
+    //   amount: 1230,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 'a6',
+    //   title: 'Usb',
+    //   amount: 250,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 'a7',
+    //   title: 'Earphones',
+    //   amount: 100,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 'a8',
+    //   title: 'Clothes',
+    //   amount: 1000,
+    //   date: DateTime.now(),
+    // ),
   ];
+
+  List<Transaction> get _recentTransactions {
+    return _usertransactions.where((transc) {
+      return transc.date.isAfter(
+        DateTime.now().subtract(
+          Duration(days: 7),
+        ),
+      );
+    }).toList();
+  }
 
   void _newTransaction(String newtitle, double newamount) {
     final newT = Transaction(
@@ -92,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
       context: contx,
       builder: (_) {
         return GestureDetector(
-          onTap: (){},
+          onTap: () {},
           child: NewTransaction(_newTransaction),
           behavior: HitTestBehavior.opaque,
         );
@@ -104,12 +136,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
         title: Text(
           'Personal Expenses',
-          style: TextStyle(
-            color: Colors.lightBlue,
-          ),
         ),
         actions: <Widget>[
           IconButton(
@@ -127,22 +155,14 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              width: double.infinity,
-              child: Card(
-                color: Colors.deepOrange,
-                elevation: 5,
-                child: Text('Chart'),
-              ),
-            ),
-            TransactionList(_usertransactions)
+            Chart(_recentTransactions),
+            TransactionList(_usertransactions),
           ],
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add_box),
-        backgroundColor: Colors.black,
+        child: Icon(Icons.add),
         onPressed: () => _StartAddNewTransaction(context),
       ),
     );
