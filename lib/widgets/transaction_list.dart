@@ -5,15 +5,16 @@ import '../models/transaction.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
+  final Function deleteTransaction;
 
-  TransactionList(this.transactions);
+  TransactionList(this.transactions, this.deleteTransaction);
   @override
   Widget build(BuildContext context) {
     return Container(
       //wrapping in container ,setting height then using scrollview enales list be scrolled independently,removed
       //scroll direction to horizontal is for future use
-      //list view builderr is more optimal
-      height: 400,
+      //list view builder is more optimal
+      height: 650,
       child: transactions.isEmpty
           ? Column(
               //if transactions is empty
@@ -39,47 +40,34 @@ class TransactionList extends StatelessWidget {
               itemBuilder: (contex, index) {
                 //needs widget to  be return
                 return Card(
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.all(12),
-                        margin: EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 14,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Theme.of(context).primaryColor,
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                        ),
-                        child: Text(
-                          'Ksh ${transactions[index].amount.toStringAsFixed(0)}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17,
-                            color: Theme.of(context).primaryColorDark,
-                          ),
+                  margin: EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
+                  elevation: 5,
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 35,
+                      child: Padding(
+                        padding: EdgeInsets.all(9),
+                        child: FittedBox(
+                          child: Text(
+                              '${transactions[index].amount.toStringAsFixed(0)}/='),
                         ),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            transactions[index].title,
-                            style: Theme.of(context).textTheme.title,
-                          ),
-                          Text(
-                            DateFormat.yMMMd().format(transactions[index].date),
-                            style: TextStyle(
-                              color: Colors.blueGrey,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
+                    ),
+                    title: Text(
+                      transactions[index].title,
+                      style: Theme.of(context).textTheme.title,
+                    ),
+                    subtitle: Text(
+                      DateFormat.yMMMd().format(transactions[index].date),
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      color: Colors.red,
+                      onPressed: () => deleteTransaction(transactions[index].id),
+                    ),
                   ),
                 );
               },
