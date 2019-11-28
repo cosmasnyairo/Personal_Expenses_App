@@ -63,9 +63,7 @@ class TransactionList extends StatelessWidget {
                   subtitle: Text(
                     DateFormat.yMMMd().format(transactions[index].date),
                   ),
-                  // 0706141462
-                  // 0711131477
-                  // 0719105188
+                
                   trailing: MediaQuery.of(context).size.width > 500
                       ? FlatButton.icon(
                         textColor: Colors.black,
