@@ -97,7 +97,7 @@ class _NewTransactionState extends State<NewTransaction> {
                     ),
                     FlatButton(
                       textColor: Theme.of(context).primaryColor,
-                      child: Text(
+                      child: const  Text(
                         'Choose Date ',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -109,7 +109,7 @@ class _NewTransactionState extends State<NewTransaction> {
                 ),
               ),
               RaisedButton(
-                child: Text('Add Transaction'),
+                child: const  Text('Add Transaction'),
                 color: Theme.of(context).primaryColor,
                 onPressed: _submit,
               )

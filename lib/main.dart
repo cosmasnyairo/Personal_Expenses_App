@@ -55,54 +55,12 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _usertransactions = [
-    Transaction(
-      id: 'a1',
-      title: 'Food',
-      amount: 2500,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 'a2',
-      title: 'Keyboard',
-      amount: 1500,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 'a3',
-      title: 'Mouse',
-      amount: 1000,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 'a4',
-      title: 'Watch',
-      amount: 1500,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 'a5',
-      title: 'Stationery',
-      amount: 1230,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 'a6',
-      title: 'Usb',
-      amount: 250,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 'a7',
-      title: 'Earphones',
-      amount: 100,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 'a8',
-      title: 'Clothes',
-      amount: 1000,
-      date: DateTime.now(),
-    ),
+    // Transaction(
+    //   id: 'a1',
+    //   title: 'Transaction 1',
+    //   amount: 1000,
+    //   date: DateTime.now(),
+    // ),
   ];
 
   bool _showChart = false;
@@ -150,25 +108,74 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  List<Widget> _buildlandscapeContent(
+    MediaQueryData mediaQuery,
+    AppBar appbar,
+    Widget txListWidget,
+  ) {
+    return [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          const Text('Show Chart'),
+          Switch.adaptive(
+            value: _showChart,
+            onChanged: (val) {
+              setState(() {
+                _showChart = val;
+              });
+            },
+          )
+        ],
+      ),
+      _showChart
+          ? Container(
+              height: (mediaQuery.size.height -
+                      appbar.preferredSize.height -
+                      mediaQuery.padding.top) *
+                  0.7,
+              child: Chart(_recentTransactions),
+            )
+          : txListWidget
+    ];
+  }
+
+  List<Widget> _buildPotraitContent(
+    MediaQueryData mediaQuery,
+    AppBar appbar,
+    Widget txListWidget,
+  ) {
+    return [
+      Container(
+        height: (mediaQuery.size.height -
+                appbar.preferredSize.height -
+                mediaQuery.padding.top) *
+            0.2,
+        child: Chart(_recentTransactions),
+      ),
+      txListWidget
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final isLandscape = mediaQuery.orientation == Orientation.landscape;
     final PreferredSizeWidget appbar = Platform.isIOS
         ? CupertinoNavigationBar(
-          middle: Text('Personal Expenses'),
-          trailing:Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              GestureDetector(
-                child: Icon(CupertinoIcons.add),
-                onTap: () => _startAddNewTransaction(context),
-              )
-             ],
-          ),
-        )
+            middle: const Text('Personal Expenses'),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                GestureDetector(
+                  child: Icon(CupertinoIcons.add),
+                  onTap: () => _startAddNewTransaction(context),
+                )
+              ],
+            ),
+          )
         : AppBar(
-            title: Text('Personal Expenses'),
+            title: const Text('Personal Expenses'),
             actions: <Widget>[
               IconButton(
                 icon: Icon(
@@ -193,39 +200,17 @@ class _MyHomePageState extends State<MyHomePage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           if (isLandscape)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('Show Chart'),
-                Switch.adaptive(
-                  value: _showChart,
-                  onChanged: (val) {
-                    setState(() {
-                      _showChart = val;
-                    });
-                  },
-                )
-              ],
+            ..._buildlandscapeContent(
+              mediaQuery,
+              appbar,
+              txListWidget,
             ),
           if (!isLandscape)
-            Container(
-              height: (mediaQuery.size.height -
-                      appbar.preferredSize.height -
-                      mediaQuery.padding.top) *
-                  0.2,
-              child: Chart(_recentTransactions),
+            ..._buildPotraitContent(
+              mediaQuery,
+              appbar,
+              txListWidget,
             ),
-          if (!isLandscape) txListWidget,
-          if (isLandscape)
-            _showChart
-                ? Container(
-                    height: (mediaQuery.size.height -
-                            appbar.preferredSize.height -
-                            mediaQuery.padding.top) *
-                        0.7,
-                    child: Chart(_recentTransactions),
-                  )
-                : txListWidget
         ],
       ),
     );
@@ -237,8 +222,7 @@ class _MyHomePageState extends State<MyHomePage> {
         : Scaffold(
             appBar: appbar,
             body: pageBody,
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
+            floatingActionButtonLocation:FloatingActionButtonLocation.centerFloat,
             floatingActionButton: Platform.isIOS
                 ? Container() //no floating button in IOS
                 : FloatingActionButton(

@@ -42,9 +42,9 @@ class Chart extends StatelessWidget {
   Widget build(BuildContext context) {
     return  Card(
         elevation: 8,
-        margin: EdgeInsets.all(11),
+        margin: const EdgeInsets.all(11),
         child: Container(
-          padding: EdgeInsets.all(8),
+          padding:const  EdgeInsets.all(8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: groupedTransactionValues.map((data) {
